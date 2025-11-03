@@ -18,8 +18,8 @@ const RoadConditionsMap = dynamic(
   }
 )
 
-// API configuration
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+// API configuration - use Vercel proxy route to avoid mixed content
+const API_URL = '/api'  // Use Vercel's API route (proxies to VPS)
 const REFRESH_INTERVAL = 60000 // 60 seconds
 
 // Fetcher function for SWR
@@ -83,9 +83,9 @@ export default function Home() {
       <div className="h-screen w-full flex items-center justify-center bg-gray-900">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-red-500 mb-4">Connection Error</h1>
-          <p className="text-white mb-2">Could not connect to API server</p>
+          <p className="text-white mb-2">Could not connect to VPS API server</p>
           <p className="text-gray-400 text-sm">
-            Make sure the server is running at: {API_URL}
+            Check that the VPS is running and accessible
           </p>
           <p className="text-gray-500 text-xs mt-4">
             Error: {error.message}
@@ -106,7 +106,7 @@ export default function Home() {
       <div className="h-screen w-full flex items-center justify-center bg-gray-900">
         <div className="text-center">
           <div className="text-white text-xl mb-4">Loading data...</div>
-          <div className="text-gray-400 text-sm">Connecting to {API_URL}</div>
+          <div className="text-gray-400 text-sm">Fetching road conditions from VPS...</div>
         </div>
       </div>
     )
