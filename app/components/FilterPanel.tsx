@@ -111,7 +111,7 @@ export default function FilterPanel({ onSearchChange, onFilterChange, onVisualiz
                 />
                 <div className="flex items-center gap-1.5 sm:gap-2 group-hover:scale-105 transition-transform duration-200">
                   <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
-                  <span className="text-xs sm:text-sm text-gray-700 font-medium">Safe</span>
+                  <span className="text-xs sm:text-sm text-gray-700 font-medium">Clear</span>
                 </div>
               </label>
 
