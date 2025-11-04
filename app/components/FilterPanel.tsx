@@ -38,34 +38,17 @@ export default function FilterPanel({ onSearchChange, onFilterChange, onVisualiz
   };
 
   return (
-    <div className="absolute top-[75px] left-12 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200 overflow-hidden transition-all duration-300">
+    <div className="absolute top-[75px] left-2 sm:left-4 md:left-12 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200 overflow-hidden transition-all duration-300 w-[calc(50vw-1rem)] min-w-[160px] sm:w-auto sm:min-w-[200px] md:min-w-[240px] max-w-[320px]">
       {/* Toggle Button */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors duration-200"
+        className="w-full flex items-center justify-between p-2 sm:p-3 md:p-4 hover:bg-gray-50 transition-colors duration-200"
       >
-        <div className="flex items-center gap-2">
-          {/* <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg p-2">
-            <svg
-              className="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-              />
-            </svg>
-          </div> */}
-          <span className="font-bold text-blue-700">
-            Filters
-          </span>
-        </div>
+        <span className="text-xs sm:text-sm md:text-base font-bold text-blue-700">
+          Filters
+        </span>
         <svg
-          className={`w-5 h-5 ml-1 text-blue-700 transition-transform duration-300 ${
+          className={`w-4 h-4 sm:w-5 sm:h-5 text-blue-700 transition-transform duration-300 ${
             isExpanded ? 'rotate-180' : ''
           }`}
           fill="none"
@@ -83,7 +66,7 @@ export default function FilterPanel({ onSearchChange, onFilterChange, onVisualiz
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="px-4 pb-4 space-y-4 animate-fadeIn">
+        <div className="px-2 sm:px-3 md:px-4 pb-2 sm:pb-3 md:pb-4 space-y-2 sm:space-y-3 md:space-y-4 animate-fadeIn">
           {/* Search Input */}
           {/* <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -115,59 +98,59 @@ export default function FilterPanel({ onSearchChange, onFilterChange, onVisualiz
 
           {/* Filter Checkboxes */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
               Condition Filters
             </label>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer group">
+            <div className="space-y-1 sm:space-y-2">
+              <label className="flex items-center gap-1.5 sm:gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
                   checked={filters.showSafe}
                   onChange={() => handleFilterToggle('showSafe')}
-                  className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                 />
-                <div className="flex items-center gap-2 group-hover:scale-105 transition-transform duration-200">
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <span className="text-sm text-gray-700 font-medium">Safe</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 group-hover:scale-105 transition-transform duration-200">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
+                  <span className="text-xs sm:text-sm text-gray-700 font-medium">Safe</span>
                 </div>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer group">
+              <label className="flex items-center gap-1.5 sm:gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
                   checked={filters.showCaution}
                   onChange={() => handleFilterToggle('showCaution')}
-                  className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
                 />
-                <div className="flex items-center gap-2 group-hover:scale-105 transition-transform duration-200">
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <span className="text-sm text-gray-700 font-medium">Caution</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 group-hover:scale-105 transition-transform duration-200">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500"></div>
+                  <span className="text-xs sm:text-sm text-gray-700 font-medium">Caution</span>
                 </div>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer group">
+              <label className="flex items-center gap-1.5 sm:gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
                   checked={filters.showHazardous}
                   onChange={() => handleFilterToggle('showHazardous')}
-                  className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
                 />
-                <div className="flex items-center gap-2 group-hover:scale-105 transition-transform duration-200">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <span className="text-sm text-gray-700 font-medium">Hazardous</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 group-hover:scale-105 transition-transform duration-200">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500"></div>
+                  <span className="text-xs sm:text-sm text-gray-700 font-medium">Hazardous</span>
                 </div>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer group">
+              <label className="flex items-center gap-1.5 sm:gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
                   checked={filters.showFailed}
                   onChange={() => handleFilterToggle('showFailed')}
-                  className="w-4 h-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
                 />
-                <div className="flex items-center gap-2 group-hover:scale-105 transition-transform duration-200">
-                  <div className="w-3 h-3 rounded-full bg-gray-500"></div>
-                  <span className="text-sm text-gray-700 font-medium">Unknown</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 group-hover:scale-105 transition-transform duration-200">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gray-500"></div>
+                  <span className="text-xs sm:text-sm text-gray-700 font-medium">Unknown</span>
                 </div>
               </label>
             </div>
@@ -175,29 +158,29 @@ export default function FilterPanel({ onSearchChange, onFilterChange, onVisualiz
 
           {/* Visualization Mode */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
               Map View
             </label>
-            <div className="space-y-2">
+            <div className="space-y-1.5 sm:space-y-2">
               <button
                 onClick={() => onVisualizationModeChange('heatmap')}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+                className={`w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg transition-all duration-200 ${
                   visualizationMode === 'heatmap'
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
                     : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
                 }`}
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z" />
                 </svg>
-                <div className="flex-1 text-left">
-                  <div className="font-semibold text-sm">Heatmap View</div>
-                  <div className={`text-xs ${visualizationMode === 'heatmap' ? 'text-purple-100' : 'text-gray-500'}`}>
-                    Area-based gradient
+                <div className="flex-1 text-left min-w-0">
+                  <div className="font-semibold text-xs sm:text-sm truncate">Heatmap</div>
+                  <div className={`text-[10px] sm:text-xs ${visualizationMode === 'heatmap' ? 'text-purple-100' : 'text-gray-500'} hidden sm:block`}>
+                    Area gradient
                   </div>
                 </div>
                 {visualizationMode === 'heatmap' && (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 )}
@@ -205,23 +188,23 @@ export default function FilterPanel({ onSearchChange, onFilterChange, onVisualiz
 
               <button
                 onClick={() => onVisualizationModeChange('markers')}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+                className={`w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg transition-all duration-200 ${
                   visualizationMode === 'markers'
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
                     : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
                 }`}
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                 </svg>
-                <div className="flex-1 text-left">
-                  <div className="font-semibold text-sm">Camera Markers</div>
-                  <div className={`text-xs ${visualizationMode === 'markers' ? 'text-purple-100' : 'text-gray-500'}`}>
+                <div className="flex-1 text-left min-w-0">
+                  <div className="font-semibold text-xs sm:text-sm truncate">Markers</div>
+                  <div className={`text-[10px] sm:text-xs ${visualizationMode === 'markers' ? 'text-purple-100' : 'text-gray-500'} hidden sm:block`}>
                     Individual pins
                   </div>
                 </div>
                 {visualizationMode === 'markers' && (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 )}
