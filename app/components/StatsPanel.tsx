@@ -54,7 +54,7 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
     <div className="absolute top-[88px] right-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-2xl p-5 min-w-[300px] border border-gray-200">
       {/* Header */}
       <div className="flex items-center gap-2 pb-3 mb-4 border-b-2 border-gradient-to-r from-blue-500 to-purple-500">
-        <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg p-2">
+        {/* <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg p-2">
           <svg
             className="w-5 h-5 text-white"
             fill="none"
@@ -68,8 +68,8 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             />
           </svg>
-        </div>
-        <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        </div> */}
+        <h3 className="text-lg font-bold text-blue-700">
           Road Conditions
         </h3>
       </div>

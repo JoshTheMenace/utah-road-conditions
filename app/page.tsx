@@ -66,6 +66,7 @@ interface ApiResponse {
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [visualizationMode, setVisualizationMode] = useState<'markers' | 'heatmap'>('heatmap')
   const [filters, setFilters] = useState<FilterState>({
     showSafe: true,
     showCaution: true,
@@ -179,7 +180,7 @@ export default function Home() {
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-red-400 mb-3">Connection Error</h1>
-          <p className="text-white mb-2 font-semibold">Could not connect to API server</p>
+          <p className="text-white mb-2 font-semibold">Could not connect to server</p>
           <p className="text-blue-200 text-sm mb-4">
             The road conditions service is temporarily unavailable
           </p>
@@ -230,6 +231,8 @@ export default function Home() {
       <FilterPanel
         onSearchChange={setSearchTerm}
         onFilterChange={setFilters}
+        onVisualizationModeChange={setVisualizationMode}
+        visualizationMode={visualizationMode}
       />
 
       {/* Stats Panel */}
@@ -237,7 +240,7 @@ export default function Home() {
 
       {/* Map */}
       <div className="h-full w-full pt-[64px] pb-[48px]">
-        <RoadConditionsMap data={filteredData} />
+        <RoadConditionsMap data={filteredData} visualizationMode={visualizationMode} />
       </div>
 
       {/* Footer */}
