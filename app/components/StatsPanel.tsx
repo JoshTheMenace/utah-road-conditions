@@ -97,7 +97,7 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
           {/* Stats Cards */}
           <div className="space-y-2 sm:space-y-3">
             <StatCard
-              label="Safe"
+              label="Clear"
               value={stats.safe}
               percentage={getPercentage(stats.safe)}
               bgColor="bg-gradient-to-r from-green-50 to-emerald-50"
