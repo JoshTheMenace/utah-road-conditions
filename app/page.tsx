@@ -115,7 +115,7 @@ export default function Home() {
 
   // Filter camera data based on search term and filters
   const getFilteredData = () => {
-    if (!data) return null
+    if (!data || !data.data) return null
 
     const filteredData: CameraData = {}
 
@@ -197,7 +197,7 @@ export default function Home() {
     )
   }
 
-  if (isLoading || !data) {
+  if (isLoading || !data || !data.data || !data.stats) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <div className="text-center">
@@ -206,15 +206,16 @@ export default function Home() {
           <div className="text-blue-200 text-sm">Fetching real-time road conditions</div>
           <div className="mt-4 flex items-center justify-center gap-1">
             <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
           </div>
         </div>
       </div>
     )
   }
 
-  const filteredData = getFilteredData()
+  // At this point, data, data.data, and data.stats are guaranteed to exist
+  const filteredData = getFilteredData() || {}
   const filteredStats = getFilteredStats()
 
   return (
@@ -236,7 +237,7 @@ export default function Home() {
 
       {/* Map */}
       <div className="h-full w-full pt-[64px] pb-[48px]">
-        <RoadConditionsMap data={filteredData || {}} />
+        <RoadConditionsMap data={filteredData} />
       </div>
 
       {/* Footer */}
