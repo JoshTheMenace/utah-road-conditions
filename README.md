@@ -28,10 +28,10 @@ Create a `.env.local` file:
 cp .env.local.example .env.local
 ```
 
-Edit `.env.local` and set your VPS API URL:
+Edit `.env.local` and set your backend API URL:
 
 ```
-NEXT_PUBLIC_API_URL=http://YOUR_VPS_IP:5000
+API_URL=http://YOUR_BACKEND_API:5000
 ```
 
 ### 3. Run Development Server
@@ -72,11 +72,11 @@ udot-web/
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `NEXT_PUBLIC_API_URL` | VPS API endpoint | `http://12.34.56.78:5000` |
+| `API_URL` | Backend API endpoint | `http://localhost:5000` |
 
 ## API Endpoints Used
 
-The app fetches from your VPS API:
+The app fetches from your backend API:
 
 - `GET /api/conditions` - All camera data + statistics
 - Auto-refreshes every 60 seconds
@@ -98,14 +98,14 @@ vercel
 1. Push code to GitHub
 2. Go to [vercel.com](https://vercel.com)
 3. Import your repository
-4. Add environment variable: `NEXT_PUBLIC_API_URL`
+4. Add environment variable: `API_URL`
 5. Deploy!
 
 ### Important: Set Environment Variable
 
 In Vercel dashboard:
 1. Go to Project Settings → Environment Variables
-2. Add: `NEXT_PUBLIC_API_URL` = `http://YOUR_VPS_IP:5000`
+2. Add: `API_URL` = `http://YOUR_BACKEND_API:5000`
 3. Redeploy
 
 ## Development
@@ -165,10 +165,10 @@ const SAFETY_COLORS = {
 
 ### "Connection Error" Message
 
-- Check that VPS API server is running
-- Verify `.env.local` has correct VPS IP
-- Check VPS firewall allows port 5000
-- Ensure CORS is enabled (handled by api_server.py)
+- Check that backend API server is running
+- Verify `.env.local` has correct API endpoint
+- Check backend firewall allows port 5000
+- Ensure CORS is enabled on backend
 
 ### Map Not Loading
 
@@ -179,14 +179,14 @@ const SAFETY_COLORS = {
 ### Build Fails on Vercel
 
 - Make sure all dependencies are in `package.json`
-- Check that `NEXT_PUBLIC_API_URL` is set in Vercel
+- Check that `API_URL` is set in Vercel
 - Review build logs for specific errors
 
 ## Security Notes
 
 ### HTTPS Requirement
 
-If deploying to Vercel (HTTPS), your VPS should also use HTTPS to avoid mixed content warnings. Options:
+If deploying to Vercel (HTTPS), your backend API should also use HTTPS to avoid mixed content warnings. Options:
 
 1. **Use Cloudflare Tunnel** (recommended, free)
 2. **Use nginx with Let's Encrypt**
@@ -211,5 +211,5 @@ Same as parent project.
 
 For issues related to:
 - **Web app**: Check this README
-- **VPS API**: See `../VPS_DEPLOYMENT.md`
-- **Classification pipeline**: See `../VPS_OPTIMIZATION.md`
+- **Backend API**: See backend deployment documentation
+- **Classification pipeline**: See backend optimization documentation

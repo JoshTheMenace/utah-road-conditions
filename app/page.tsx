@@ -26,7 +26,7 @@ const RoadConditionsMap = dynamic(
 )
 
 // API configuration - use Vercel proxy route to avoid mixed content
-const API_URL = ''  // Use Vercel's API route (proxies to VPS)
+const API_URL = ''  // Use Vercel's API route
 const REFRESH_INTERVAL = 60000 // 60 seconds
 
 // Fetcher function for SWR
