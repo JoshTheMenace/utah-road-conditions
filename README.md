@@ -4,6 +4,8 @@ Real-time Utah road condition monitoring from traffic cameras, powered by Next.j
 
 [DEMO](https://roads.joshthemenace.com)
 
+<img width="1815" height="907" alt="image" src="https://github.com/user-attachments/assets/d732ff9c-d0a3-491b-9b29-c141f321c2fb" />
+
 ## Features
 
 - 🗺️ **Interactive Map** - View all Utah traffic cameras with color-coded safety levels
