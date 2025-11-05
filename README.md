@@ -1,7 +1,9 @@
 # UDOT Road Conditions Web App
 
 Real-time Utah road condition monitoring from traffic cameras, powered by Next.js and deployed on Vercel.
-[DEMO](roads.joshthemenace.com)
+
+[DEMO](https://roads.joshthemenace.com)
+
 ## Features
 
 - 🗺️ **Interactive Map** - View all Utah traffic cameras with color-coded safety levels
