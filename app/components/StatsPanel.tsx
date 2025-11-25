@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Stats {
   total: number;
@@ -17,30 +17,86 @@ interface StatsPanelProps {
 interface StatCardProps {
   label: string;
   value: number;
+  percentage: number;
+  gradientFrom: string;
+  gradientTo: string;
+  glowColor: string;
   icon: React.ReactNode;
-  bgColor: string;
-  textColor: string;
-  iconBg: string;
-  percentage?: number;
+  delay: number;
 }
 
-function StatCard({ label, value, icon, bgColor, textColor, iconBg, percentage }: StatCardProps) {
+function StatCard({ label, value, percentage, gradientFrom, gradientTo, glowColor, icon, delay }: StatCardProps) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
   return (
-    <div className={`${bgColor} rounded-lg p-2 sm:p-3 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border border-opacity-20`}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className={`${iconBg} rounded-lg p-1.5 sm:p-2 shadow-md`}>
-            {icon}
+    <div
+      className={`
+        relative group
+        transition-all duration-500 ease-out
+        ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}
+      `}
+    >
+      {/* Glow effect on hover */}
+      <div
+        className={`
+          absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100
+          transition-opacity duration-500 blur-xl -z-10
+          ${glowColor}
+        `}
+      />
+
+      <div className={`
+        relative overflow-hidden
+        bg-gradient-to-br ${gradientFrom} ${gradientTo}
+        border border-white/[0.08]
+        rounded-xl p-3
+        transition-all duration-300
+        hover:border-white/[0.15]
+        hover:shadow-lg hover:-translate-y-0.5
+        group
+      `}>
+        {/* Shimmer effect */}
+        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
+
+        <div className="relative flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {/* Icon container */}
+            <div className={`
+              flex items-center justify-center
+              w-10 h-10
+              bg-white/10 backdrop-blur-sm
+              rounded-lg
+              shadow-inner
+              transition-transform duration-300
+              group-hover:scale-110
+            `}>
+              {icon}
+            </div>
+
+            {/* Label and percentage */}
+            <div>
+              <p className="text-sm font-semibold text-white/90">{label}</p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <div className="h-1.5 w-16 bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-white/40 rounded-full transition-all duration-700 ease-out"
+                    style={{ width: `${Math.min(percentage, 100)}%` }}
+                  />
+                </div>
+                <span className="text-xs text-white/60 tabular-nums">{percentage}%</span>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className={`text-xs sm:text-sm font-semibold ${textColor}`}>{label}</p>
-            {percentage !== undefined && (
-              <p className="text-xs text-gray-600">{percentage}%</p>
-            )}
+
+          {/* Value */}
+          <div className="text-2xl font-bold text-white tabular-nums stats-number">
+            {value}
           </div>
-        </div>
-        <div className={`text-xl sm:text-2xl font-bold ${textColor}`}>
-          {value}
         </div>
       </div>
     </div>
@@ -48,130 +104,197 @@ function StatCard({ label, value, icon, bgColor, textColor, iconBg, percentage }
 }
 
 export default function StatsPanel({ stats }: StatsPanelProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const getPercentage = (value: number) => {
     return stats.total > 0 ? Math.round((value / stats.total) * 100) : 0;
   };
 
   return (
-    <div className="absolute top-[75px] right-2 sm:right-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200 overflow-hidden transition-all duration-300 w-[calc(100vw-1rem)] sm:w-auto sm:min-w-[280px] md:min-w-[300px] max-w-[350px]">
-      {/* Toggle Button - Always Visible */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-3 sm:p-4 hover:bg-gray-50 transition-colors duration-200"
-      >
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm sm:text-lg font-bold text-blue-700">
-            Road Conditions
-          </h3>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* Mobile: Show total count when collapsed */}
-          {!isExpanded && (
-            <span className="text-xs sm:text-sm font-bold text-blue-700 bg-blue-50 px-2 py-1 rounded">
-              {stats.total} cameras
-            </span>
-          )}
-          <svg
-            className={`w-4 h-4 sm:w-5 sm:h-5 text-blue-700 transition-transform duration-300 ${
-              isExpanded ? 'rotate-180' : ''
-            }`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </div>
-      </button>
+    <div className={`
+      absolute top-[85px] right-2 sm:right-4
+      z-[1000]
+      w-[calc(100vw-1rem)] sm:w-auto sm:min-w-[300px] max-w-[340px]
+      transition-all duration-700 ease-out delay-100
+      ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}
+    `}>
+      <div className="
+        bg-dark-900/70 backdrop-blur-xl
+        border border-white/[0.08]
+        rounded-2xl
+        shadow-[0_8px_32px_rgba(0,0,0,0.4)]
+        overflow-hidden
+      ">
+        {/* Gradient accent */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-emerald-500/50 via-amber-500/50 to-rose-500/50" />
 
-      {/* Expanded Content */}
-      {isExpanded && (
-        <div className="px-3 sm:px-5 pb-3 sm:pb-5 animate-fadeIn">
-          {/* Stats Cards */}
-          <div className="space-y-2 sm:space-y-3">
+        {/* Header */}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="
+            w-full flex items-center justify-between
+            p-4
+            hover:bg-white/[0.02]
+            transition-colors duration-300
+            group
+          "
+        >
+          <div className="flex items-center gap-3">
+            <div className="
+              p-2 rounded-lg
+              bg-gradient-to-br from-blue-500/20 to-violet-500/20
+              border border-white/[0.08]
+            ">
+              <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <div className="text-left">
+              <h3 className="text-sm font-bold text-white">Road Conditions</h3>
+              <p className="text-xs text-slate-400">Live camera analysis</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {!isExpanded && (
+              <span className="
+                text-xs font-bold text-blue-400
+                bg-blue-500/10 border border-blue-500/20
+                px-2.5 py-1 rounded-lg
+              ">
+                {stats.total}
+              </span>
+            )}
+            <svg
+              className={`
+                w-5 h-5 text-slate-400
+                transition-transform duration-300
+                group-hover:text-white
+                ${isExpanded ? 'rotate-180' : ''}
+              `}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
+
+        {/* Stats Content */}
+        <div className={`
+          overflow-hidden transition-all duration-500 ease-out
+          ${isExpanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}
+        `}>
+          <div className="px-4 pb-4 space-y-2.5">
+            {/* Clear/Safe */}
             <StatCard
               label="Clear"
               value={stats.safe}
               percentage={getPercentage(stats.safe)}
-              bgColor="bg-gradient-to-r from-green-50 to-emerald-50"
-              textColor="text-green-700"
-              iconBg="bg-green-500"
+              gradientFrom="from-emerald-500/20"
+              gradientTo="to-green-600/10"
+              glowColor="bg-emerald-500/20"
+              delay={50}
               icon={
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               }
             />
 
+            {/* Caution */}
             <StatCard
               label="Caution"
               value={stats.caution}
               percentage={getPercentage(stats.caution)}
-              bgColor="bg-gradient-to-r from-yellow-50 to-amber-50"
-              textColor="text-yellow-700"
-              iconBg="bg-yellow-500"
+              gradientFrom="from-amber-500/20"
+              gradientTo="to-orange-600/10"
+              glowColor="bg-amber-500/20"
+              delay={100}
               icon={
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               }
             />
 
+            {/* Hazardous */}
             <StatCard
               label="Hazardous"
               value={stats.hazardous}
               percentage={getPercentage(stats.hazardous)}
-              bgColor="bg-gradient-to-r from-red-50 to-rose-50"
-              textColor="text-red-700"
-              iconBg="bg-red-500"
+              gradientFrom="from-rose-500/20"
+              gradientTo="to-red-600/10"
+              glowColor="bg-rose-500/20"
+              delay={150}
               icon={
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <svg className="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               }
             />
 
+            {/* Failed - Only show if there are failures */}
             {stats.failed > 0 && (
               <StatCard
-                label="Failed"
+                label="Unknown"
                 value={stats.failed}
                 percentage={getPercentage(stats.failed)}
-                bgColor="bg-gradient-to-r from-gray-50 to-slate-50"
-                textColor="text-gray-700"
-                iconBg="bg-gray-500"
+                gradientFrom="from-slate-500/20"
+                gradientTo="to-gray-600/10"
+                glowColor="bg-slate-500/20"
+                delay={200}
                 icon={
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 }
               />
             )}
-          </div>
 
-          {/* Total Summary */}
-          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
-            <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-2 sm:p-3">
-              <div className="flex items-center gap-2">
-                <div className="bg-blue-500 rounded-full p-1 sm:p-1.5">
-                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                  </svg>
+            {/* Divider */}
+            <div className="pt-2">
+              <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            </div>
+
+            {/* Total Summary */}
+            <div className="
+              relative overflow-hidden
+              bg-gradient-to-br from-blue-500/10 to-violet-500/10
+              border border-white/[0.08]
+              rounded-xl p-3
+            ">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="
+                    flex items-center justify-center
+                    w-10 h-10
+                    bg-gradient-to-br from-blue-500/30 to-violet-500/30
+                    rounded-lg
+                  ">
+                    <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white/90">Total Cameras</p>
+                    <p className="text-xs text-slate-400">Monitoring statewide</p>
+                  </div>
                 </div>
-                <span className="text-xs sm:text-sm font-semibold text-blue-900">Total Cameras</span>
+                <div className="text-2xl font-bold text-gradient-blue tabular-nums">
+                  {stats.total}
+                </div>
               </div>
-              <span className="text-xl sm:text-2xl font-bold text-blue-700">{stats.total}</span>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -29,14 +29,27 @@ interface RoadConditionsMapProps {
 }
 
 const SAFETY_COLORS = {
-  safe: '#00FF00',
-  caution: '#FFA500',
-  hazardous: '#FF0000',
-  unknown: '#808080'
+  safe: '#22c55e',
+  caution: '#f59e0b',
+  hazardous: '#ef4444',
+  unknown: '#64748b'
+}
+
+const SAFETY_GRADIENTS = {
+  safe: 'from-emerald-500 to-green-600',
+  caution: 'from-amber-500 to-orange-600',
+  hazardous: 'from-rose-500 to-red-600',
+  unknown: 'from-slate-500 to-gray-600'
+}
+
+const SAFETY_LABELS = {
+  safe: 'Clear',
+  caution: 'Caution',
+  hazardous: 'Hazardous',
+  unknown: 'Unknown'
 }
 
 export default function RoadConditionsMap({ data, visualizationMode }: RoadConditionsMapProps) {
-
   // Utah center coordinates
   const center: LatLngExpression = [39.3, -111.0]
 
@@ -66,7 +79,7 @@ export default function RoadConditionsMap({ data, visualizationMode }: RoadCondi
         scrollWheelZoom={true}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
@@ -83,61 +96,116 @@ export default function RoadConditionsMap({ data, visualizationMode }: RoadCondi
             <CircleMarker
               key={camera.id}
               center={[camera.camera.latitude, camera.camera.longitude]}
-              radius={6}
+              radius={8}
               pathOptions={{
-                color: 'white',
+                color: 'rgba(255, 255, 255, 0.8)',
                 fillColor: color,
                 fillOpacity: 0.9,
                 weight: 2
               }}
             >
-              <Popup maxWidth={350}>
-                <div className="p-2">
-                  <h4 className="font-bold text-sm mb-2">
-                    {camera.camera.display_name}
-                  </h4>
-
-                  {camera.classification && (
-                    <>
-                      <div
-                        className="text-white font-bold text-center py-2 px-3 rounded mb-2"
-                        style={{ backgroundColor: color }}
-                      >
-                        {safetyLevel.toUpperCase()}
+              <Popup maxWidth={320} minWidth={280}>
+                <div className="p-0 -m-[14px] -mb-[14px]">
+                  {/* Header with gradient */}
+                  <div className={`
+                    bg-gradient-to-r ${SAFETY_GRADIENTS[safetyLevel]}
+                    px-4 py-3
+                  `}>
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
                       </div>
-
-                      <div className="text-xs space-y-1">
-                        <div>
-                          <strong>Condition:</strong> {camera.classification.condition}
-                        </div>
-                        <div>
-                          <strong>Confidence:</strong>{' '}
-                          {(camera.classification.confidence * 100).toFixed(1)}%
-                        </div>
-                        <div>
-                          <strong>Detected:</strong>{' '}
-                          {new Date(camera.classification.timestamp).toLocaleString()}
-                        </div>
-                      </div>
-
-                      {camera.camera.image_url && (
-                        <a
-                          href={camera.camera.image_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block mt-2 text-xs text-blue-600 hover:underline"
-                        >
-                          View Live Camera →
-                        </a>
-                      )}
-                    </>
-                  )}
-
-                  {!camera.classification && (
-                    <div className="text-xs text-gray-500">
-                      No classification data available
+                      <span className="text-xs font-bold text-white/90 uppercase tracking-wider">
+                        {SAFETY_LABELS[safetyLevel]}
+                      </span>
                     </div>
-                  )}
+                    <h4 className="font-bold text-white text-sm mt-2 leading-tight">
+                      {camera.camera.display_name}
+                    </h4>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-4 space-y-3">
+                    {camera.classification ? (
+                      <>
+                        {/* Condition Details */}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-slate-400 font-medium">Condition</span>
+                            <span className="text-xs text-white font-semibold">
+                              {camera.classification.condition}
+                            </span>
+                          </div>
+
+                          {/* Confidence Bar */}
+                          <div>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs text-slate-400 font-medium">Confidence</span>
+                              <span className="text-xs text-white font-semibold tabular-nums">
+                                {(camera.classification.confidence * 100).toFixed(0)}%
+                              </span>
+                            </div>
+                            <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full bg-gradient-to-r ${SAFETY_GRADIENTS[safetyLevel]}`}
+                                style={{ width: `${camera.classification.confidence * 100}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-slate-400 font-medium">Detected</span>
+                            <span className="text-xs text-slate-300">
+                              {new Date(camera.classification.timestamp).toLocaleString(undefined, {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* View Camera Button */}
+                        {camera.camera.image_url && (
+                          <a
+                            href={camera.camera.image_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="
+                              flex items-center justify-center gap-2
+                              w-full py-2 px-3
+                              bg-gradient-to-r from-blue-500/20 to-violet-500/20
+                              hover:from-blue-500/30 hover:to-violet-500/30
+                              border border-blue-500/30
+                              rounded-lg
+                              text-xs font-semibold text-blue-300
+                              transition-all duration-300
+                              group
+                            "
+                          >
+                            <svg className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View Live Camera
+                            <svg className="w-3 h-3 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        )}
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-2 text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-xs">No classification data available</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </Popup>
             </CircleMarker>
